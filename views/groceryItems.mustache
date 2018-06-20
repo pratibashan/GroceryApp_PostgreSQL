@@ -1,0 +1,29 @@
+
+
+<html>
+<head>
+</head>
+<body>
+
+
+  <h1>Grocery Items</h1>
+
+  
+
+  
+<div>
+      <form action="/viewgroceryitems" method="post">
+            <select name="dropdownShopName">
+                <option value="0">Select Shop Name</option>
+                  {{#shopNames}}
+                      <option value="{{id}}">{{name}}</option>
+                  {{/shopNames}}
+              </select>
+            <input type="submit" name="btnViewGroceryItem" value="View Grocery Item"/>
+            <form action='/addgroceryitems' method ='post'>
+                <input type="submit" name = 'btnAddGroceryItem'  value ="Add Grocery Items">
+            </form>
+      </form>
+    </div>
+</body>
+</html>

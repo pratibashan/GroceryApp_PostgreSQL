@@ -22,43 +22,79 @@ var pgp = require('pg-promise')(options)
 var connectionString = 'postgres://localhost:5432/groceries'
 var db = pgp(connectionString)
 
-let shoppingListArray = []
 
-app.get('/entergroceries',function(req,res){
-    res.render('entergroceries')
-})
+app.get('/',function(req,res){
 
-
-app.post('/entergroceries',function(req,res){
-    let groceryCategory = req.body.groceryCategory
-    let groceryItem = req.body.groceryItem
-    let quantity = parseInt(req.body.quantity)
-    let price = parseFloat(req.body.price)
-
-    db.one('INSERT INTO GroceryCategory(categoryname) values($1) RETURNING categoryid',[groceryCategory]).then(function(data){
-        console.log(data.categoryid)
-   
-    db.none('INSERT INTO GroceryItem(groceryItemName,quantity,price,categoryid) values($1,$2,$3,$4)',[groceryItem,quantity,price,data.categoryid]).then(function(){
-
-    }) 
+    res.render('home')
 
 })
 
-    res.send("Shopping list added") 
+app.post('/shoplists',function(req,res){
+     
+    res.redirect('shoplists')    
+    
+ })
 
-})   
 
-app.get('/viewgroceries',function(req,res){
-   
-    db.any('SELECT categoryname,groceryItemName,quantity,price FROM GroceryCategory JOIN GroceryItem ON GroceryCategory.categoryid =GroceryItem.categoryid').then(function(data){
+
+app.get('/shoplists',function(req,res){
+
+    db.any('SELECT id,name FROM ShopNames').then(function(data){
         console.log(data)
-        
-        res.render('viewGroceries',{'shoppingList' : data})
+              
+        res.render('shopLists',{'shopNames' : data})
 
+    
     })
-
-
 })
+
+
+app.post('/addshop',function(req,res){
+
+    let shopName = req.body.shopName
+    db.none('INSERT INTO ShopNames(name) values($1)',[shopName]).then(function(){   
+
+        res.redirect('/shopLists')   
+                  
+    })
+   
+})
+
+app.post('/deleteshop',function(req,res){
+
+    let shopId = parseInt(req.body.shopId)
+
+    db.none('DELETE FROM ShopNames WHERE id =$1',[shopId]).then(function(){   
+
+        res.redirect('/shopLists')   
+                  
+    })
+   
+})
+
+app.post('/groceryitems',function(req,res){
+
+    res.redirect('groceryItems')
+})
+
+app.get('/groceryItems',function(req,res){
+
+    db.any('SELECT id,name FROM ShopNames').then(function(data){
+        console.log(data)
+              
+        res.render('groceryItems',{'shopNames' : data})
+ 
+    })
+})
+
+app.post('/addgroceryitems',function(req,res){
+
+    res.redirect('/addGroceryItems')
+})
+
+
+
   
-  app.listen(3000, () => console.log('app listening on port 3000!'))
-  
+app.listen(3000,function(){
+    console.log('app listening on port 3000')
+})

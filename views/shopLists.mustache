@@ -1,0 +1,37 @@
+
+
+<html>
+<head>
+</head>
+<body>
+
+
+  <h1>Shopping List</h1>
+
+  
+    <div>
+      <form action="/addshop" method="post">
+            <label>Enter Shop Name:</label>
+            <input type="text" name="shopName"/>
+            <input type="submit" name="btnAddShop" value="Add Shop"/>
+      </form>
+    </div>
+
+    <div>
+      {{#shopNames}}
+
+        <p id="shopName">{{name}}</p>
+        
+        <form action='/deleteshop' method='post'>
+          <input type="hidden" name="shopId" value='{{id}}' />
+          <input type="submit" value="Delete Shop" />
+        </form>
+
+  
+      {{/shopNames}}
+
+    </div>
+        
+
+</body>
+</html>
